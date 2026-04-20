@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>의용어 트레이너</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3f;
+    --accent: #7c6cfc;
+    --accent2: #fc6c8f;
+    --accent3: #6cfcca;
+    --text: #e8e8f0;
+    --text-muted: #6e6e8f;
+    --correct: #4ade80;
+    --wrong: #f87171;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Noto Sans KR', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 배경 노이즈 느낌 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(124,108,252,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(252,108,143,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── 헤더 ── */
+  header {
+    padding: 40px 0 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); }
+
+  .stats-bar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .stat {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .stat strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .stat.correct strong { color: var(--correct); }
+  .stat.wrong strong { color: var(--wrong); }
+
+  /* ── 모드 탭 ── */
+  .mode-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 24px 0 0;
+  }
+
+  .tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { border-color: var(--accent); color: var(--accent); }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .tab.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .tab.disabled:hover { border-color: var(--border); color: var(--text-muted); }
+
+  .soon-badge {
+    font-size: 9px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── 퀴즈 카드 ── */
+  .quiz-area {
+    padding: 40px 0;
+  }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    opacity: 0.6;
+  }
+  .card.correct-card { border-color: var(--correct); }
+  .card.wrong-card { border-color: var(--wrong); }
+
+  .card-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    letter-spacing: 0.1em;
+  }
+
+  .question-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: var(--display);
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .question-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    font-family: var(--mono);
+  }
+
+  /* 입력 */
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .answer-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .answer-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,108,252,0.15);
+  }
+  .answer-input.correct {
+    border-color: var(--correct);
+    box-shadow: 0 0 0 3px rgba(74,222,128,0.15);
+    color: var(--correct);
+  }
+  .answer-input.wrong {
+    border-color: var(--wrong);
+    box-shadow: 0 0 0 3px rgba(248,113,113,0.15);
+    color: var(--wrong);
+  }
+  .answer-input::placeholder { color: var(--text-muted); }
+
+  .submit-btn {
+    padding: 14px 24px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+  .submit-btn:hover { background: #6a5ae0; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* 피드백 */
+  .feedback {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    min-height: 48px;
+  }
+  .feedback.show { opacity: 1; }
+  .feedback.correct {
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: var(--correct);
+  }
+  .feedback.wrong {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.3);
+    color: var(--wrong);
+  }
+
+  /* 다음 버튼 */
+  .next-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.08em;
+    display: none;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── 결과 화면 ── */
+  .result-screen {
+    display: none;
+    padding: 60px 0;
+    text-align: center;
+  }
+  .result-screen.show { display: block; }
+
+  .result-score {
+    font-family: var(--display);
+    font-size: 80px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .result-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .result-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  .breakdown-item {
+    text-align: center;
+    font-family: var(--mono);
+  }
+  .breakdown-item .num {
+    font-size: 32px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .breakdown-item .lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .breakdown-item.c .num { color: var(--correct); }
+  .breakdown-item.w .num { color: var(--wrong); }
+
+  /* 틀린 단어 목록 */
+  .wrong-list {
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .wrong-list h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .wrong-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    gap: 16px;
+  }
+  .wrong-item:last-child { border-bottom: none; }
+  .wrong-item .korean { color: var(--text-muted); font-size: 13px; }
+  .wrong-item .answer { font-family: var(--mono); color: var(--correct); }
+  .wrong-item .my-answer { font-family: var(--mono); color: var(--wrong); font-size: 12px; }
+
+  .restart-btn {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--accent), #5a4ae0);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,108,252,0.3); }
+
+  /* ── 설정 패널 ── */
+  .config-panel {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .config-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .config-item label { white-space: nowrap; }
+  .config-item select, .config-item input[type=number] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+  }
+  .config-item select:focus, .config-item input[type=number]:focus {
+    border-color: var(--accent);
+  }
+  .start-btn {
+    margin-left: auto;
+    padding: 8px 20px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .start-btn:hover { background: #6a5ae0; }
+
+  /* 애니메이션 */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card { animation: slideUp 0.35s ease both; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 헤더 -->
+  <header>
+    <div class="logo">med<span>.</span>quiz</div>
+    <div class="stats-bar">
+      <div class="stat correct"><strong id="totalCorrect">0</strong>누적 정답</div>
+      <div class="stat wrong"><strong id="totalWrong">0</strong>누적 오답</div>
+      <div class="stat"><strong id="totalSessions">0</strong>세션</div>
+    </div>
+  </header>
+
+  <!-- 모드 탭 -->
+  <div class="mode-tabs">
+    <button class="tab active" data-mode="typing">타이핑</button>
+    <button class="tab disabled" title="준비중">객관식 <span class="soon-badge">SOON</span></button>
+    <button class="tab disabled" title="준비중">플래시카드 <span class="soon-badge">SOON</span></button>
+    <button class="tab disabled" title="준비중">통계 <span class="soon-badge">SOON</span></button>
+  </div>
+
+  <!-- 설정 패널 -->
+  <div class="config-panel">
+    <div class="config-item">
+      <label>문제 수</label>
+      <input type="number" id="countInput" value="20" min="5" max="246" style="width:64px">
+    </div>
+    <div class="config-item">
+      <label>순서</label>
+      <select id="orderSelect">
+        <option value="random">랜덤</option>
+        <option value="seq">순서대로</option>
+      </select>
+    </div>
+    <div class="config-item">
+      <label>대소문자</label>
+      <select id="caseSelect">
+        <option value="ignore">무시</option>
+        <option value="strict">구분</option>
+      </select>
+    </div>
+    <button class="start-btn" id="startBtn">시작</button>
+  </div>
+
+  <!-- 퀴즈 영역 -->
+  <div class="quiz-area" id="quizArea" style="display:none">
+    <div class="progress-row">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
+    </div>
+
+    <div class="card" id="quizCard">
+      <div class="card-num" id="cardNum">WORD #001</div>
+      <div class="question-label">한국어 뜻</div>
+      <div class="question-text" id="questionText">—</div>
+      <div class="question-hint" id="questionHint"></div>
+
+      <div class="input-row">
+        <input
+          class="answer-input"
+          id="answerInput"
+          type="text"
+          placeholder="영어 단어 입력..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button class="submit-btn" id="submitBtn">확인</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn">다음 문제 →</button>
+    </div>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-score" id="resultScore">0%</div>
+    <div class="result-label">이번 세션 결과</div>
+    <div class="result-breakdown">
+      <div class="breakdown-item c"><span class="num" id="resCorrect">0</span><span class="lbl">정답</span></div>
+      <div class="breakdown-item w"><span class="num" id="resWrong">0</span><span class="lbl">오답</span></div>
+      <div class="breakdown-item"><span class="num" id="resTotal">0</span><span class="lbl">전체</span></div>
+    </div>
+    <div class="wrong-list" id="wrongList" style="display:none">
+      <h3>틀린 단어</h3>
+      <div id="wrongItems"></div>
+    </div>
+    <button class="restart-btn" id="restartBtn">다시 시작</button>
+  </div>
+
+</div>
+
+<script>
+// ── 데이터 ──
+const RAW = {"1":{"name":"abductor","mean":"외전근 (벌림근)"},"2":{"name":"abnormal","mean":"비정상적인"},"3":{"name":"abscess","mean":"농양"},"4":{"name":"achondroplasia","mean":"연골무형성증"},"5":{"name":"acrophobia","mean":"고소공포증"},"6":{"name":"acromegaly","mean":"말단비대증"},"7":{"name":"adductor","mean":"내전근 (모음근)"},"8":{"name":"adenoids","mean":"아데노이드"},"9":{"name":"adipose tissue","mean":"지방조직"},"10":{"name":"adrenal glands","mean":"부신"},"11":{"name":"agoraphobia","mean":"광장공포증"},"12":{"name":"amniocentesis","mean":"양수천자"},"13":{"name":"amnion","mean":"양막"},"14":{"name":"anabolism","mean":"동화작용"},"15":{"name":"analysis","mean":"분석"},"16":{"name":"anemia","mean":"빈혈"},"17":{"name":"angiogenesis","mean":"혈관신생"},"18":{"name":"angiography","mean":"혈관조영술"},"19":{"name":"angiopathy","mean":"혈관병증"},"20":{"name":"angioplasty","mean":"혈관성형술"},"21":{"name":"anoxia","mean":"무산소증"},"22":{"name":"ante cibum","mean":"식전 (의학약어 a.c.)"},"23":{"name":"anteflexion","mean":"전굴 (앞굽음)"},"24":{"name":"antepartum","mean":"분만 전"},"25":{"name":"antibiotic","mean":"항생제"},"26":{"name":"antibody","mean":"항체"},"27":{"name":"antigen","mean":"항원"},"28":{"name":"antisepsis","mean":"방부"},"29":{"name":"antitoxin","mean":"항독소"},"30":{"name":"apnea","mean":"무호흡"},"31":{"name":"apoptosis","mean":"세포자멸사 (세포예정사)"},"32":{"name":"arteriosclerosis","mean":"동맥경화증"},"33":{"name":"arthralgia","mean":"관절통"},"34":{"name":"arthritis","mean":"관절염"},"35":{"name":"atrophy","mean":"위축"},"36":{"name":"autoimmune disease","mean":"자가면역질환"},"37":{"name":"autopsy","mean":"부검"},"38":{"name":"benign","mean":"양성의"},"39":{"name":"bifurcation","mean":"분기 (갈림)"},"40":{"name":"bilateral","mean":"양측의"},"41":{"name":"biopsy","mean":"생검 (조직검사)"},"42":{"name":"bone marrow","mean":"골수"},"43":{"name":"bradycardia","mean":"서맥 (느린맥)"},"44":{"name":"bronchitis","mean":"기관지염"},"45":{"name":"carcinogenesis","mean":"발암 (암발생)"},"46":{"name":"carcinogenic","mean":"발암성의"},"47":{"name":"cardiology","mean":"심장학"},"48":{"name":"cardiomyopathy","mean":"심근병증"},"49":{"name":"cartilage","mean":"연골"},"50":{"name":"catabolism","mean":"이화작용"},"51":{"name":"cervical","mean":"경부의 (목의, 자궁경부의)"},"52":{"name":"chemotherapy","mean":"화학요법 (항암화학요법)"},"53":{"name":"chondromalacia","mean":"연골연화증"},"54":{"name":"coccygeal","mean":"미골의 (꼬리뼈의)"},"55":{"name":"colon","mean":"결장"},"56":{"name":"colostomy","mean":"결장루조성술 (장루술)"},"57":{"name":"congenital anomaly","mean":"선천기형"},"58":{"name":"connective tissue","mean":"결합조직"},"59":{"name":"contraindication","mean":"금기"},"60":{"name":"contralateral","mean":"반대측의"},"61":{"name":"craniotomy","mean":"개두술"},"62":{"name":"cystitis","mean":"방광염"},"63":{"name":"cystocele","mean":"방광류"},"64":{"name":"cystoscopy","mean":"방광경검사"},"65":{"name":"cytology","mean":"세포학"},"66":{"name":"dehydration","mean":"탈수"},"67":{"name":"dermatitis","mean":"피부염"},"68":{"name":"dermatology","mean":"피부과"},"69":{"name":"diaphragm","mean":"횡격막"},"70":{"name":"dialysis","mean":"투석"},"71":{"name":"diameter","mean":"직경 (지름)"},"72":{"name":"diarrhea","mean":"설사"},"73":{"name":"dorsal","mean":"등쪽의 (배측의)"},"74":{"name":"dysentery","mean":"이질"},"75":{"name":"dysplasia","mean":"이형성증"},"76":{"name":"ectopic pregnancy","mean":"자궁외 임신"},"77":{"name":"electrocardiogram","mean":"심전도 (ECG/EKG)"},"78":{"name":"endocardium","mean":"심내막"},"79":{"name":"endocrinology","mean":"내분비학"},"80":{"name":"endoscope","mean":"내시경"},"81":{"name":"endoscopy","mean":"내시경검사"},"82":{"name":"endotracheal","mean":"기관내의"},"83":{"name":"enteritis","mean":"장염"},"84":{"name":"epicardium","mean":"심외막"},"85":{"name":"epidermis","mean":"표피"},"86":{"name":"epiglottis","mean":"후두개"},"87":{"name":"epinephrine","mean":"에피네프린 (아드레날린)"},"88":{"name":"epithelial cell","mean":"상피세포"},"89":{"name":"epithelium","mean":"상피"},"90":{"name":"erythrocyte","mean":"적혈구"},"91":{"name":"erythropenia","mean":"적혈구감소증"},"92":{"name":"esophagus","mean":"식도"},"93":{"name":"euphoria","mean":"다행감 (행복감)"},"94":{"name":"euthyroid","mean":"정상 갑상선 기능의"},"95":{"name":"exophthalmos","mean":"안구돌출증"},"96":{"name":"fallopian tube","mean":"나팔관 (자궁관)"},"97":{"name":"forceps","mean":"겸자"},"98":{"name":"gonococcus","mean":"임균"},"99":{"name":"granulocyte","mean":"과립구"},"100":{"name":"groin","mean":"서혜부 (사타구니)"},"101":{"name":"gynecology","mean":"부인과학"},"102":{"name":"hematology","mean":"혈액학"},"103":{"name":"hematoma","mean":"혈종"},"104":{"name":"hemiglossectomy","mean":"반설절제술 (혀 반절제술)"},"105":{"name":"hemoglobin","mean":"헤모글로빈 (혈색소)"},"106":{"name":"hemolysis","mean":"용혈"},"107":{"name":"hemostasis","mean":"지혈"},"108":{"name":"hepatitis","mean":"간염"},"109":{"name":"hydrotherapy","mean":"수치료(법)"},"110":{"name":"hydronephrosis","mean":"수신증"},"111":{"name":"hyperglycemia","mean":"고혈당증"},"112":{"name":"hyperplasia","mean":"과형성(증)"},"113":{"name":"hypertrophy","mean":"비대"},"114":{"name":"hypodermic injection","mean":"피하주사"},"115":{"name":"hypoglycemia","mean":"저혈당증"},"116":{"name":"iatrogenic","mean":"의인성의 (의료행위로 인해 생긴)"},"117":{"name":"incision","mean":"절개"},"118":{"name":"infracostal","mean":"늑골하의 (갈비뼈 아래의)"},"119":{"name":"insomniac","mean":"불면증 환자"},"120":{"name":"intercostal","mean":"늑간의 (갈비뼈 사이의)"},"121":{"name":"intervertebral disk","mean":"추간판 (디스크)"},"122":{"name":"intravenous","mean":"정맥내의"},"123":{"name":"laparoscope","mean":"복강경"},"124":{"name":"laparoscopy","mean":"복강경검사"},"125":{"name":"laparotomy","mean":"개복술"},"126":{"name":"larynx","mean":"후두"},"127":{"name":"leukemia","mean":"백혈병"},"128":{"name":"leukocyte","mean":"백혈구"},"129":{"name":"lumbar","mean":"요부의 (허리의)"},"130":{"name":"lymph","mean":"림프 (임파)"},"131":{"name":"macrocephaly","mean":"대두증"},"132":{"name":"malaise","mean":"권태감 (불쾌감)"},"133":{"name":"malignant","mean":"악성의"},"134":{"name":"mammogram","mean":"유방촬영술"},"135":{"name":"mastectomy","mean":"유방절제술"},"136":{"name":"mediastinum","mean":"종격동"},"137":{"name":"metacarpal bones","mean":"중수골 (손허리뼈)"},"138":{"name":"metamorphosis","mean":"변태 (형태 변화)"},"139":{"name":"metastasis","mean":"전이"},"140":{"name":"microscope","mean":"현미경"},"141":{"name":"mononuclear cell","mean":"단핵세포"},"142":{"name":"morphology","mean":"형태학"},"143":{"name":"mucus","mean":"점액"},"144":{"name":"multiple myelomas","mean":"다발성 골수종"},"145":{"name":"muscle","mean":"근육"},"146":{"name":"myalgia","mean":"근육통"},"147":{"name":"myelitis","mean":"척수염"},"148":{"name":"necrosis","mean":"괴사"},"149":{"name":"neonatal","mean":"신생아의"},"150":{"name":"neoplasm","mean":"신생물 (종양)"},"151":{"name":"nephropathy","mean":"신장병증"},"152":{"name":"nephrosis","mean":"신증"},"153":{"name":"neuralgia","mean":"신경통"},"154":{"name":"neutropenia","mean":"호중구감소증"},"155":{"name":"neutrophil","mean":"호중구"},"156":{"name":"nucleus","mean":"핵"},"157":{"name":"omphalocele","mean":"제류 (배꼽탈장)"},"158":{"name":"oncology","mean":"종양학"},"159":{"name":"ophthalmologist","mean":"안과 전문의"},"160":{"name":"ophthalmology","mean":"안과학"},"161":{"name":"osteogenesis","mean":"골형성"},"162":{"name":"osteogenic","mean":"골형성의"},"163":{"name":"osteology","mean":"골학"},"164":{"name":"osteomalacia","mean":"골연화증"},"165":{"name":"osteopenia","mean":"골감소증"},"166":{"name":"osteoporosis","mean":"골다공증"},"167":{"name":"otalgia","mean":"이통 (귀통증)"},"168":{"name":"ovary","mean":"난소"},"169":{"name":"pancytopenia","mean":"범혈구감소증"},"170":{"name":"paralysis","mean":"마비"},"171":{"name":"parathyroid glands","mean":"부갑상선"},"172":{"name":"pathogenesis","mean":"발병기전"},"173":{"name":"pathogenic","mean":"병원성의"},"174":{"name":"pathology","mean":"병리학"},"175":{"name":"pediatric","mean":"소아의"},"176":{"name":"pelvis","mean":"골반"},"177":{"name":"percutaneous","mean":"경피적 (피부를 통한)"},"178":{"name":"pericardium","mean":"심낭 (심장막)"},"179":{"name":"peritoneum","mean":"복막"},"180":{"name":"pharynx","mean":"인두"},"181":{"name":"phlebotomy","mean":"정맥절개술 (사혈)"},"182":{"name":"placenta","mean":"태반"},"183":{"name":"platelets","mean":"혈소판"},"184":{"name":"pleura","mean":"흉막 (가슴막)"},"185":{"name":"pneumonia","mean":"폐렴"},"186":{"name":"polymorphonuclear","mean":"다형핵의"},"187":{"name":"polymorphonuclear leukocyte","mean":"다형핵 백혈구"},"188":{"name":"polyneuritis","mean":"다발신경염"},"189":{"name":"postmortem","mean":"사후의 (부검)"},"190":{"name":"postpartum","mean":"산후의"},"191":{"name":"precancerous","mean":"전암성의"},"192":{"name":"prenatal","mean":"산전의 (출생 전의)"},"193":{"name":"prodrome","mean":"전구증상"},"194":{"name":"prolapse","mean":"탈출증"},"195":{"name":"prosthesis","mean":"보철물 (인공삽입물)"},"196":{"name":"ptosis","mean":"안검하수 (눈꺼풀처짐)"},"197":{"name":"radiotherapy","mean":"방사선치료"},"198":{"name":"recombinant dna","mean":"재조합 DNA"},"199":{"name":"rectocele","mean":"직장류"},"200":{"name":"rectum","mean":"직장"},"201":{"name":"relapse","mean":"재발"},"202":{"name":"remission","mean":"관해 (증상 완화)"},"203":{"name":"retroflexion","mean":"후굴 (뒤굽음)"},"204":{"name":"retroperitoneal","mean":"복막후의 (복막 뒤의)"},"205":{"name":"rhinitis","mean":"비염"},"206":{"name":"rhinorrhea","mean":"비루 (콧물)"},"207":{"name":"sacral","mean":"천골의 (엉치뼈의)"},"208":{"name":"sarcoma","mean":"육종"},"209":{"name":"spinal cord","mean":"척수"},"210":{"name":"spleen","mean":"비장 (지라)"},"211":{"name":"splenomegaly","mean":"비장비대"},"212":{"name":"staphylococci","mean":"포도상구균"},"213":{"name":"streptococcus","mean":"연쇄상구균"},"214":{"name":"subcutaneous","mean":"피하의"},"215":{"name":"suprapubic","mean":"치골상의 (두덩위)"},"216":{"name":"symbiosis","mean":"공생"},"217":{"name":"symmetry","mean":"대칭"},"218":{"name":"symphysis","mean":"결합 (섬유연골결합)"},"219":{"name":"symptom","mean":"증상"},"220":{"name":"syndactyly","mean":"합지증 (가락붙음증)"},"221":{"name":"syndrome","mean":"증후군"},"222":{"name":"synthesis","mean":"합성"},"223":{"name":"tachypnea","mean":"빈호흡 (빠른호흡)"},"224":{"name":"thoracentesis","mean":"흉강천자"},"225":{"name":"thoracic","mean":"흉부의"},"226":{"name":"thoracotomy","mean":"개흉술"},"227":{"name":"thrombocyte","mean":"혈소판"},"228":{"name":"thrombocytopenia","mean":"혈소판감소증"},"229":{"name":"thrombophlebitis","mean":"혈전정맥염"},"230":{"name":"tonsillitis","mean":"편도염"},"231":{"name":"tonsils","mean":"편도"},"232":{"name":"trachea","mean":"기관 (숨길)"},"233":{"name":"tracheostomy","mean":"기관절개술"},"234":{"name":"transfusion","mean":"수혈"},"235":{"name":"transurethral","mean":"경요도의 (요도를 통한)"},"236":{"name":"ultrasonography","mean":"초음파검사"},"237":{"name":"umbilical","mean":"제대의 (배꼽의)"},"238":{"name":"unilateral","mean":"편측의 (한쪽의)"},"239":{"name":"ureter","mean":"요관"},"240":{"name":"urethra","mean":"요도"},"241":{"name":"urinary bladder","mean":"방광"},"242":{"name":"urologist","mean":"비뇨기과 전문의"},"243":{"name":"uterus","mean":"자궁"},"244":{"name":"vagina","mean":"질"},"245":{"name":"ventral","mean":"복측의 (배쪽의)"},"246":{"name":"viscera","mean":"내장"}};
+
+// 배열로 변환
+const WORDS = Object.entries(RAW)
+  .filter(([k]) => k !== 'total_id')
+  .map(([id, v]) => ({ id: parseInt(id), ...v }));
+
+// ── 상태 ──
+let queue = [];
+let currentIdx = 0;
+let sessionCorrect = 0;
+let sessionWrong = 0;
+let answered = false;
+let wrongLog = []; // { mean, correct, mine }
+let totalCorrect = parseInt(localStorage.getItem('tc') || '0');
+let totalWrong   = parseInt(localStorage.getItem('tw') || '0');
+let totalSessions= parseInt(localStorage.getItem('ts') || '0');
+
+// ── DOM ──
+const $ = id => document.getElementById(id);
+const startBtn   = $('startBtn');
+const quizArea   = $('quizArea');
+const resultScreen = $('resultScreen');
+const answerInput = $('answerInput');
+const submitBtn  = $('submitBtn');
+const nextBtn    = $('nextBtn');
+const feedback   = $('feedback');
+
+function updateGlobalStats() {
+  $('totalCorrect').textContent = totalCorrect;
+  $('totalWrong').textContent   = totalWrong;
+  $('totalSessions').textContent= totalSessions;
+}
+updateGlobalStats();
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── 시작 ──
+startBtn.addEventListener('click', () => {
+  const count = Math.min(Math.max(parseInt($('countInput').value) || 20, 1), WORDS.length);
+  const order = $('orderSelect').value;
+  const pool  = order === 'random' ? shuffle(WORDS) : [...WORDS];
+  queue = pool.slice(0, count);
+  currentIdx = 0;
+  sessionCorrect = 0;
+  sessionWrong   = 0;
+  wrongLog = [];
+  answered = false;
+
+  quizArea.style.display = 'block';
+  resultScreen.classList.remove('show');
+  document.querySelector('.config-panel').style.display = 'none';
+  document.querySelector('.mode-tabs').style.display = 'none';
+
+  loadQuestion();
+});
+
+function loadQuestion() {
+  if (currentIdx >= queue.length) { showResult(); return; }
+  const word = queue[currentIdx];
+  answered = false;
+
+  const card = $('quizCard');
+  card.className = 'card';
+  $('cardNum').textContent = `WORD #${String(word.id).padStart(3,'0')}`;
+  $('questionText').textContent = word.mean;
+
+  // 힌트: 글자 수
+  const len = word.name.length;
+  $('questionHint').textContent = `${len}글자`;
+
+  answerInput.value = '';
+  answerInput.className = 'answer-input';
+  answerInput.disabled = false;
+  submitBtn.disabled = false;
+  feedback.className = 'feedback';
+  feedback.textContent = '';
+  nextBtn.className = 'next-btn';
+
+  // 진행률
+  const pct = (currentIdx / queue.length) * 100;
+  $('progressFill').style.width = pct + '%';
+  $('progressLabel').textContent = `${currentIdx} / ${queue.length}`;
+
+  answerInput.focus();
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const word = queue[currentIdx];
+  const caseMode = $('caseSelect').value;
+  let input = answerInput.value.trim();
+  let correct = word.name;
+
+  if (caseMode === 'ignore') {
+    input   = input.toLowerCase();
+    correct = correct.toLowerCase();
+  }
+
+  answered = true;
+  answerInput.disabled = true;
+  submitBtn.disabled = true;
+  nextBtn.className = 'next-btn show';
+
+  if (input === correct) {
+    sessionCorrect++;
+    totalCorrect++;
+    answerInput.className = 'answer-input correct';
+    $('quizCard').classList.add('correct-card');
+    feedback.className = 'feedback correct show';
+    feedback.textContent = '✓ 정답!';
+  } else {
+    sessionWrong++;
+    totalWrong++;
+    answerInput.className = 'answer-input wrong';
+    $('quizCard').classList.add('wrong-card');
+    $('quizCard').classList.add('shake');
+    setTimeout(() => $('quizCard').classList.remove('shake'), 400);
+    feedback.className = 'feedback wrong show';
+    feedback.textContent = `✗ 오답 — 정답: ${word.name}`;
+    wrongLog.push({ mean: word.mean, correct: word.name, mine: answerInput.value.trim() });
+  }
+
+  localStorage.setItem('tc', totalCorrect);
+  localStorage.setItem('tw', totalWrong);
+  updateGlobalStats();
+}
+
+submitBtn.addEventListener('click', checkAnswer);
+answerInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (answered) { nextQuestion(); }
+    else { checkAnswer(); }
+  }
+});
+
+function nextQuestion() {
+  currentIdx++;
+  loadQuestion();
+}
+nextBtn.addEventListener('click', nextQuestion);
+
+// ── 결과 ──
+function showResult() {
+  quizArea.style.display = 'none';
+  resultScreen.classList.add('show');
+  totalSessions++;
+  localStorage.setItem('ts', totalSessions);
+  updateGlobalStats();
+
+  const pct = Math.round((sessionCorrect / queue.length) * 100);
+  $('resultScore').textContent = pct + '%';
+  $('resCorrect').textContent  = sessionCorrect;
+  $('resWrong').textContent    = sessionWrong;
+  $('resTotal').textContent    = queue.length;
+
+  if (wrongLog.length > 0) {
+    $('wrongList').style.display = 'block';
+    $('wrongItems').innerHTML = wrongLog.map(w => `
+      <div class="wrong-item">
+        <span class="korean">${w.mean}</span>
+        <span class="answer">${w.correct}</span>
+        <span class="my-answer">내 답: ${w.mine || '(없음)'}</span>
+      </div>
+    `).join('');
+  } else {
+    $('wrongList').style.display = 'none';
+  }
+}
+
+$('restartBtn').addEventListener('click', () => {
+  resultScreen.classList.remove('show');
+  document.querySelector('.config-panel').style.display = 'flex';
+  document.querySelector('.mode-tabs').style.display = 'flex';
+  $('progressFill').style.width = '0%';
+  $('progressLabel').textContent = '0 / 0';
+});
+</script>
+</body>
+</html>
