@@ -500,10 +500,10 @@
 
   <!-- 모드 탭 -->
   <div class="mode-tabs">
-  <button class="tab active" data-mode="typing">타이핑</button>
-  <button class="tab" data-mode="choice">플래시카드 (객관식)</button> </div>
-
-<div id="choiceUI" style="display:none; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+    <button class="tab active" data-mode="typing">타이핑</button>
+    <button class="tab disabled" title="준비중">객관식 <span class="soon-badge">SOON</span></button>
+    <button class="tab disabled" title="준비중">플래시카드 <span class="soon-badge">SOON</span></button>
+    <button class="tab disabled" title="준비중">통계 <span class="soon-badge">SOON</span></button>
   </div>
 
   <!-- 설정 패널 -->
@@ -580,18 +580,8 @@
 </div>
 
 <script>
-// ── 데이터 ──
-let WORDS = [];
-let currentMode = 'typing';
-
-
-// 배열로 변환
-const WORDS = Object.entries(RAW)
-  .filter(([k]) => k !== 'total_id')
-  .map(([id, v]) => ({ id: parseInt(id), ...v }));
-
-
 // ── 상태 ──
+let WORDS = [];
 let queue = [];
 let currentIdx = 0;
 let sessionCorrect = 0;
@@ -612,6 +602,26 @@ const submitBtn  = $('submitBtn');
 const nextBtn    = $('nextBtn');
 const feedback   = $('feedback');
 
+// ── 데이터 로드 ──
+async function loadTerms() {
+  try {
+    const response = await fetch('medical_terms.json');
+    if (!response.ok) throw new Error('Network response was not ok');
+    const rawData = await response.json();
+    
+    WORDS = Object.entries(rawData)
+      .filter(([k]) => k !== 'total_id')
+      .map(([id, v]) => ({ id: parseInt(id), ...v }));
+
+    $('countInput').max = WORDS.length;
+    startBtn.disabled = false;
+  } catch (error) {
+    console.error('Failed to load terms:', error);
+    alert('데이터를 불러오지 못했습니다. 서버 환경인지 확인해주세요.');
+  }
+}
+loadTerms();
+
 function updateGlobalStats() {
   $('totalCorrect').textContent = totalCorrect;
   $('totalWrong').textContent   = totalWrong;
@@ -628,32 +638,10 @@ function shuffle(arr) {
   return a;
 }
 
-// [추가] JSON 데이터 불러오기
-async function loadExternalData() {
-  const res = await fetch('medical_terms.json');
-  const data = await res.json();
-  // JSON을 배열로 변환 (기존 RAW 구조 대응)
-  WORDS = Object.entries(data)
-    .filter(([k]) => k !== 'total_id')
-    .map(([id, v]) => ({ id, ...v }));
-  
-  $('startBtn').disabled = false;
-  $('startBtn').textContent = '시작';
-}
-loadExternalData();
-
-
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    currentMode = tab.dataset.mode;
-  };
-});
-  
 // ── 시작 ──
 startBtn.addEventListener('click', () => {
+  if (WORDS.length === 0) return;
+
   const count = Math.min(Math.max(parseInt($('countInput').value) || 20, 1), WORDS.length);
   const order = $('orderSelect').value;
   const pool  = order === 'random' ? shuffle(WORDS) : [...WORDS];
@@ -700,44 +688,6 @@ function loadQuestion() {
   $('progressLabel').textContent = `${currentIdx} / ${queue.length}`;
 
   answerInput.focus();
-  if (currentMode === 'typing') {
-    $('typingUI').style.display = 'flex'; // 기존 입력창 영역
-    $('choiceUI').style.display = 'none';
-    answerInput.focus();
-  } else {
-    $('typingUI').style.display = 'none';
-    $('choiceUI').style.display = 'grid';
-    renderChoices(word);
-  }
-}
-
-
-function renderChoices(correctWord) {
-  const container = $('choiceUI');
-  container.innerHTML = '';
-  
-  // 오답 3개 + 정답 1개 섞기
-  const distractors = WORDS.filter(w => w.id !== correctWord.id).sort(() => 0.5 - Math.random()).slice(0, 3);
-  const choices = [...distractors, correctWord].sort(() => 0.5 - Math.random());
-
-  choices.forEach(choice => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn'; // 스타일은 위에 정의한 것 사용
-    btn.style.cssText = "background: var(--surface2); border: 1px solid var(--border); padding: 15px; border-radius: 10px; color: var(--text); cursor: pointer;";
-    btn.textContent = choice.mean;
-    
-    btn.onclick = () => {
-      if(answered) return;
-      if(choice.id === correctWord.id) {
-        btn.style.borderColor = "var(--correct)";
-        checkAnswer(true); // 기존 checkAnswer 함수를 활용하도록 수정 필요
-      } else {
-        btn.style.borderColor = "var(--wrong)";
-        checkAnswer(false);
-      }
-    };
-    container.appendChild(btn);
-  });
 }
 
 function checkAnswer() {
