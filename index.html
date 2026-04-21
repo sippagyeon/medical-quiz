@@ -468,6 +468,43 @@
   }
   .start-btn:hover { background: #6a5ae0; }
 
+  .mcq-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+  }
+
+  .mcq-btn {
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    text-align: left;
+  }
+
+  .mcq-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.25);
+  }
+
+  .mcq-btn.correct {
+    background: rgba(74, 222, 128, 0.15);
+    border-color: #4ade80;
+    color: #4ade80;
+  }
+
+  .mcq-btn.wrong {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: #f87171;
+    color: #f87171;
+  }
+
+
   /* 애니메이션 */
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -500,81 +537,141 @@
 
   <!-- 모드 탭 -->
   <div class="mode-tabs">
-    <button class="tab active" data-mode="typing">타이핑</button>
-    <button class="tab disabled" title="준비중">객관식 <span class="soon-badge">SOON</span></button>
+    <button class="tab active" data-mode="typing" data-target="typing-mode">타이핑</button>
+    <button class="tab" data-target="mcq-mode">객관식</button>
     <button class="tab disabled" title="준비중">플래시카드 <span class="soon-badge">SOON</span></button>
     <button class="tab disabled" title="준비중">통계 <span class="soon-badge">SOON</span></button>
   </div>
 
-  <!-- 설정 패널 -->
-  <div class="config-panel">
-    <div class="config-item">
-      <label>문제 수</label>
-      <input type="number" id="countInput" value="20" min="5" max="246" style="width:64px">
-    </div>
-    <div class="config-item">
-      <label>순서</label>
-      <select id="orderSelect">
-        <option value="random">랜덤</option>
-        <option value="seq">순서대로</option>
-      </select>
-    </div>
-    <div class="config-item">
-      <label>대소문자</label>
-      <select id="caseSelect">
-        <option value="ignore">무시</option>
-        <option value="strict">구분</option>
-      </select>
-    </div>
-    <button class="start-btn" id="startBtn">시작</button>
-  </div>
-
-  <!-- 퀴즈 영역 -->
-  <div class="quiz-area" id="quizArea" style="display:none">
-    <div class="progress-row">
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  <div id="typing-mode" class="mode-section">
+    <!-- 설정 패널 -->
+    <div class="config-panel">
+      <div class="config-item">
+        <label>문제 수</label>
+        <input type="number" id="countInput" value="20" min="5" max="246" style="width:64px">
       </div>
-      <div class="progress-label" id="progressLabel">0 / 0</div>
+      <div class="config-item">
+        <label>순서</label>
+        <select id="orderSelect">
+          <option value="random">랜덤</option>
+          <option value="seq">순서대로</option>
+        </select>
+      </div>
+      <div class="config-item">
+        <label>대소문자</label>
+        <select id="caseSelect">
+          <option value="ignore">무시</option>
+          <option value="strict">구분</option>
+        </select>
+      </div>
+      <button class="start-btn" id="startBtn">시작</button>
     </div>
 
-    <div class="card" id="quizCard">
-      <div class="card-num" id="cardNum">WORD #001</div>
-      <div class="question-label">한국어 뜻</div>
-      <div class="question-text" id="questionText">—</div>
-      <div class="question-hint" id="questionHint"></div>
-
-      <div class="input-row">
-        <input
-          class="answer-input"
-          id="answerInput"
-          type="text"
-          placeholder="영어 단어 입력..."
-          autocomplete="off"
-          spellcheck="false"
-        >
-        <button class="submit-btn" id="submitBtn">확인</button>
+    <!-- 퀴즈 영역 -->
+    <div class="quiz-area" id="quizArea" style="display:none">
+      <div class="progress-row">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">0 / 0</div>
       </div>
 
-      <div class="feedback" id="feedback"></div>
-      <button class="next-btn" id="nextBtn">다음 문제 →</button>
+      <div class="card" id="quizCard">
+        <div class="card-num" id="cardNum">WORD #001</div>
+        <div class="question-label">한국어 뜻</div>
+        <div class="question-text" id="questionText">—</div>
+        <div class="question-hint" id="questionHint"></div>
+
+        <div class="input-row">
+          <input
+            class="answer-input"
+            id="answerInput"
+            type="text"
+            placeholder="영어 단어 입력..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button class="submit-btn" id="submitBtn">확인</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn">다음 문제 →</button>
+      </div>
+    </div>
+  
+    <!-- 결과 화면 -->
+    <div class="result-screen" id="resultScreen">
+      <div class="result-score" id="resultScore">0%</div>
+      <div class="result-label">이번 세션 결과</div>
+      <div class="result-breakdown">
+        <div class="breakdown-item c"><span class="num" id="resCorrect">0</span><span class="lbl">정답</span></div>
+        <div class="breakdown-item w"><span class="num" id="resWrong">0</span><span class="lbl">오답</span></div>
+        <div class="breakdown-item"><span class="num" id="resTotal">0</span><span class="lbl">전체</span></div>
+      </div>
+      <div class="wrong-list" id="wrongList" style="display:none">
+        <h3>틀린 단어</h3>
+        <div id="wrongItems"></div>
+      </div>
+      <button class="restart-btn" id="restartBtn">다시 시작</button>
     </div>
   </div>
 
-  <!-- 결과 화면 -->
-  <div class="result-screen" id="resultScreen">
-    <div class="result-score" id="resultScore">0%</div>
-    <div class="result-label">이번 세션 결과</div>
-    <div class="result-breakdown">
-      <div class="breakdown-item c"><span class="num" id="resCorrect">0</span><span class="lbl">정답</span></div>
-      <div class="breakdown-item w"><span class="num" id="resWrong">0</span><span class="lbl">오답</span></div>
-      <div class="breakdown-item"><span class="num" id="resTotal">0</span><span class="lbl">전체</span></div>
+    <!-- 객관식 전용내용들 -->
+    <div id="mcq-mode" class="mode-section" style="display:none">
+      <!-- 설정 패널 -->
+    <div class="config-panel" id="mcqConfigPanel">
+      <div class="config-item">
+        <label>문제 수</label>
+        <input type="number" id="mcqCountInput" value="20" min="5" max="246" style="width:64px">
+      </div>
+      <div class="config-item">
+        <label>순서</label>
+        <select id="mcqOrderSelect">
+          <option value="random">랜덤</option>
+          <option value="seq">순서대로</option>
+        </select>
+      </div>
+      <button class="start-btn" id="mcqStartBtn">시작</button>
     </div>
-    <div class="wrong-list" id="wrongList" style="display:none">
-      <h3>틀린 단어</h3>
-      <div id="wrongItems"></div>
+
+    <!-- 퀴즈 영역 -->
+    <div class="quiz-area" id="mcqQuizArea" style="display:none">
+      <div class="progress-row">
+        <div class="progress-track">
+          <div class="progress-fill" id="mcqProgressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" id="mcqProgressLabel">0 / 0</div>
+      </div>
+
+      <div class="card" id="mcqCard">
+        <div class="card-num" id="mcqCardNum">WORD #001</div>
+        <div class="question-label">영어 단어</div>
+        <div class="question-text" id="mcqQuestionText">—</div>
+
+        <!-- 보기 4개 -->
+        <div class="mcq-options" id="mcqOptions">
+          <button class="mcq-btn" data-index="0"></button>
+          <button class="mcq-btn" data-index="1"></button>
+          <button class="mcq-btn" data-index="2"></button>
+          <button class="mcq-btn" data-index="3"></button>
+        </div>
+
+        <div class="feedback" id="mcqFeedback"></div>
+        <button class="next-btn" id="mcqNextBtn" style="display:none">다음 문제 →</button>
+      </div>
     </div>
-    <button class="restart-btn" id="restartBtn">다시 시작</button>
+
+    <!-- 결과 화면 -->
+    <div class="result-screen" id="mcqResultScreen">
+      <div class="result-score" id="mcqResultScore">0%</div>
+      <div class="result-label">이번 세션 결과</div>
+      <div class="result-breakdown">
+        <div class="breakdown-item c"><span class="num" id="mcqResCorrect">0</span><span class="lbl">정답</span></div>
+        <div class="breakdown-item w"><span class="num" id="mcqResWrong">0</span><span class="lbl">오답</span></div>
+        <div class="breakdown-item"><span class="num" id="mcqResTotal">0</span><span class="lbl">전체</span></div>
+      </div>
+      <button class="restart-btn" id="mcqRestartBtn">다시 시작</button>
+    </div>
   </div>
 
 </div>
@@ -591,6 +688,7 @@ let wrongLog = []; // { mean, correct, mine }
 let totalCorrect = parseInt(localStorage.getItem('tc') || '0');
 let totalWrong   = parseInt(localStorage.getItem('tw') || '0');
 let totalSessions= parseInt(localStorage.getItem('ts') || '0');
+let canPressEnter = false;
 
 // ── DOM ──
 const $ = id => document.getElementById(id);
@@ -621,6 +719,19 @@ async function loadTerms() {
   }
 }
 loadTerms();
+
+document.querySelectorAll('.tab:not(.disabled)').forEach(tab => {
+  tab.addEventListener('click', () => {
+    // 탭 active 클래스 전환
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // 모드 섹션 전환
+    document.querySelectorAll('.mode-section').forEach(s => s.style.display = 'none');
+    document.getElementById(tab.dataset.target).style.display = 'block';
+  });
+});
+
 
 function updateGlobalStats() {
   $('totalCorrect').textContent = totalCorrect;
@@ -661,6 +772,8 @@ startBtn.addEventListener('click', () => {
 });
 
 function loadQuestion() {
+  canPressEnter = false;
+
   if (currentIdx >= queue.length) { showResult(); return; }
   const word = queue[currentIdx];
   answered = false;
@@ -729,13 +842,14 @@ function checkAnswer() {
   localStorage.setItem('tc', totalCorrect);
   localStorage.setItem('tw', totalWrong);
   updateGlobalStats();
+
+  setTimeout(() => { canPressEnter = true; }, 1000);
 }
 
 submitBtn.addEventListener('click', checkAnswer);
 answerInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
-    if (answered) { nextQuestion(); }
-    else { checkAnswer(); }
+    if (!answered) checkAnswer();
   }
 });
 
@@ -780,6 +894,140 @@ $('restartBtn').addEventListener('click', () => {
   $('progressFill').style.width = '0%';
   $('progressLabel').textContent = '0 / 0';
 });
+
+// ── 객관식 모드 ──
+let mcqQueue = [];
+let mcqIdx = 0;
+let mcqCorrect = 0;
+let mcqWrong = 0;
+let mcqAnswered = false;
+
+const mcqStartBtn = $('mcqStartBtn');
+const mcqQuizArea = $('mcqQuizArea');
+const mcqResultScreen = $('mcqResultScreen');
+const mcqConfigPanel = $('mcqConfigPanel');
+
+mcqStartBtn.addEventListener('click', () => {
+  if (WORDS.length === 0) return;
+
+  const count = Math.min(Math.max(parseInt($('mcqCountInput').value) || 20, 1), WORDS.length);
+  const order = $('mcqOrderSelect').value;
+  const pool = order === 'random' ? shuffle(WORDS) : [...WORDS];
+  mcqQueue = pool.slice(0, count);
+  mcqIdx = 0;
+  mcqCorrect = 0;
+  mcqWrong = 0;
+  mcqAnswered = false;
+
+  mcqQuizArea.style.display = 'block';
+  mcqResultScreen.classList.remove('show');
+  mcqConfigPanel.style.display = 'none';
+
+  mcqLoadQuestion();
+});
+
+function mcqLoadQuestion() {
+  if (mcqIdx >= mcqQueue.length) {
+    mcqShowResult();
+    return;
+  }
+
+  const word = mcqQueue[mcqIdx];
+  mcqAnswered = false;
+
+  // 진행도
+  $('mcqCardNum').textContent = `WORD #${String(mcqIdx + 1).padStart(3, '0')}`;
+  $('mcqProgressLabel').textContent = `${mcqIdx + 1} / ${mcqQueue.length}`;
+  $('mcqProgressFill').style.width = `${((mcqIdx + 1) / mcqQueue.length) * 100}%`;
+  $('mcqQuestionText').textContent = word.name;
+  $('mcqFeedback').textContent = '';
+  $('mcqNextBtn').style.display = 'none';
+
+  // 보기 4개 생성
+  const others = WORDS.filter(w => w.id !== word.id);
+  const wrongChoices = shuffle(others).slice(0, 3).map(w => w.mean);
+  const choices = shuffle([word.mean, ...wrongChoices]);
+
+  const btns = document.querySelectorAll('.mcq-btn');
+  btns.forEach((btn, i) => {
+    btn.textContent = choices[i];
+    btn.className = 'mcq-btn';
+    btn.onclick = () => mcqHandleAnswer(btn, choices[i], word.mean);
+  });
+}
+
+function mcqHandleAnswer(btn, selected, correct) {
+  if (mcqAnswered) return;
+  mcqAnswered = true;
+
+  const btns = document.querySelectorAll('.mcq-btn');
+
+  if (selected === correct) {
+    btn.classList.add('correct');
+    $('mcqFeedback').textContent = '✅ 정답!';
+    $('mcqFeedback').style.color = '#4ade80';
+    mcqCorrect++;
+    totalCorrect++; 
+  } else {
+    btn.classList.add('wrong');
+    $('mcqFeedback').textContent = '❌ 오답!';
+    $('mcqFeedback').style.color = '#f87171';
+    mcqWrong++;
+    totalWrong++;  
+    // 정답 버튼 강조
+    btns.forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+  }
+
+
+  localStorage.setItem('tc', totalCorrect);  
+  localStorage.setItem('tw', totalWrong);    
+  updateGlobalStats();                       
+
+  $('mcqNextBtn').style.display = 'block';
+}
+
+$('mcqNextBtn').addEventListener('click', () => {
+  mcqIdx++;
+  mcqLoadQuestion();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && mcqAnswered && mcqQuizArea.style.display === 'block') {
+    e.preventDefault(); 
+    mcqIdx++;
+    mcqLoadQuestion();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && answered && canPressEnter && quizArea.style.display === 'block') {
+    e.preventDefault();
+    nextQuestion();
+  }
+});
+
+
+function mcqShowResult() {
+  mcqQuizArea.style.display = 'none';
+  mcqResultScreen.classList.add('show');
+  const total = mcqCorrect + mcqWrong;
+  const pct = total ? Math.round((mcqCorrect / total) * 100) : 0;
+  $('mcqResultScore').textContent = `${pct}%`;
+  $('mcqResCorrect').textContent = mcqCorrect;
+  $('mcqResWrong').textContent = mcqWrong;
+  $('mcqResTotal').textContent = total;
+}
+
+$('mcqRestartBtn').addEventListener('click', () => {
+  mcqResultScreen.classList.remove('show');
+  mcqConfigPanel.style.display = 'flex';
+  $('mcqProgressFill').style.width = '0%';
+  $('mcqProgressLabel').textContent = '0 / 0';
+});
+
+
 </script>
 </body>
 </html>
