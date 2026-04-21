@@ -837,8 +837,9 @@ function checkAnswer() {
   if (answered) return;
   const word = queue[currentIdx];
   const caseMode = $('caseSelect').value;
-  let input = answerInput.value.trim();
-  let correct = word.name;
+  let input = answerInput.value.trim().replace(/-/g, '');
+  let correct = word.name.replace(/-/g, '');
+
 
   if (caseMode === 'ignore') {
     input   = input.toLowerCase();
