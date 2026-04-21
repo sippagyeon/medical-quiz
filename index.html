@@ -547,6 +547,13 @@
     <!-- 설정 패널 -->
     <div class="config-panel">
       <div class="config-item">
+        <label>데이터 세트</label>
+        <select id="datasetSelect">
+          <option value="medical_terms.json">의학 용어</option>
+          <option value="medical_terms_ch3_4.json">의학 용어ch3_4</option>
+        </select>
+      </div>
+      <div class="config-item">
         <label>문제 수</label>
         <input type="number" id="countInput" value="20" min="5" max="246" style="width:64px">
       </div>
@@ -621,6 +628,13 @@
       <!-- 설정 패널 -->
     <div class="config-panel" id="mcqConfigPanel">
       <div class="config-item">
+        <label>데이터 세트</label>
+        <select id="mcqDatasetSelect">
+          <option value="medical_terms.json">의학 용어</option>
+          <option value="medical_terms_ch3_4.json">의학 용어ch3_4</option>
+        </select>
+      </div>
+      <div class="config-item">
         <label>문제 수</label>
         <input type="number" id="mcqCountInput" value="20" min="5" max="246" style="width:64px">
       </div>
@@ -678,7 +692,9 @@
 
 <script>
 // ── 상태 ──
-let WORDS = [];
+// let WORDS = []; 이거 지우고 아래로 교체
+let typingWords = [];
+let mcqWords = [];
 let queue = [];
 let currentIdx = 0;
 let sessionCorrect = 0;
@@ -701,24 +717,38 @@ const nextBtn    = $('nextBtn');
 const feedback   = $('feedback');
 
 // ── 데이터 로드 ──
-async function loadTerms() {
+async function loadTypingWords(file = 'medical_terms.json') {
   try {
-    const response = await fetch('medical_terms.json');
+    const response = await fetch(file);
     if (!response.ok) throw new Error('Network response was not ok');
     const rawData = await response.json();
-    
-    WORDS = Object.entries(rawData)
+    typingWords = Object.entries(rawData)
       .filter(([k]) => k !== 'total_id')
       .map(([id, v]) => ({ id: parseInt(id), ...v }));
-
-    $('countInput').max = WORDS.length;
+    $('countInput').max = typingWords.length;
     startBtn.disabled = false;
   } catch (error) {
-    console.error('Failed to load terms:', error);
-    alert('데이터를 불러오지 못했습니다. 서버 환경인지 확인해주세요.');
+    alert('데이터를 불러오지 못했습니다.');
   }
 }
-loadTerms();
+
+async function loadMcqWords(file = 'medical_terms.json') {
+  try {
+    const response = await fetch(file);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const rawData = await response.json();
+    mcqWords = Object.entries(rawData)
+      .filter(([k]) => k !== 'total_id')
+      .map(([id, v]) => ({ id: parseInt(id), ...v }));
+    $('mcqCountInput').max = mcqWords.length;
+    mcqStartBtn.disabled = false;
+  } catch (error) {
+    alert('데이터를 불러오지 못했습니다.');
+  }
+}
+// 기존: loadTerms();
+loadTypingWords();
+loadMcqWords();
 
 document.querySelectorAll('.tab:not(.disabled)').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -751,12 +781,12 @@ function shuffle(arr) {
 
 // ── 시작 ──
 startBtn.addEventListener('click', () => {
-  if (WORDS.length === 0) return;
-
-  const count = Math.min(Math.max(parseInt($('countInput').value) || 20, 1), WORDS.length);
+  if (typingWords.length === 0) return;
+  const count = Math.min(Math.max(parseInt($('countInput').value) || 20, 1), typingWords.length);
   const order = $('orderSelect').value;
-  const pool  = order === 'random' ? shuffle(WORDS) : [...WORDS];
+  const pool  = order === 'random' ? shuffle(typingWords) : [...typingWords];
   queue = pool.slice(0, count);
+
   currentIdx = 0;
   sessionCorrect = 0;
   sessionWrong   = 0;
@@ -908,12 +938,13 @@ const mcqResultScreen = $('mcqResultScreen');
 const mcqConfigPanel = $('mcqConfigPanel');
 
 mcqStartBtn.addEventListener('click', () => {
-  if (WORDS.length === 0) return;
 
-  const count = Math.min(Math.max(parseInt($('mcqCountInput').value) || 20, 1), WORDS.length);
+  if (mcqWords.length === 0) return;
+  const count = Math.min(Math.max(parseInt($('mcqCountInput').value) || 20, 1), mcqWords.length);
   const order = $('mcqOrderSelect').value;
-  const pool = order === 'random' ? shuffle(WORDS) : [...WORDS];
+  const pool = order === 'random' ? shuffle(mcqWords) : [...mcqWords];
   mcqQueue = pool.slice(0, count);
+  
   mcqIdx = 0;
   mcqCorrect = 0;
   mcqWrong = 0;
@@ -944,7 +975,7 @@ function mcqLoadQuestion() {
   $('mcqNextBtn').style.display = 'none';
 
   // 보기 4개 생성
-  const others = WORDS.filter(w => w.id !== word.id);
+  const others = mcqWords.filter(w => w.id !== word.id);
   const wrongChoices = shuffle(others).slice(0, 3).map(w => w.mean);
   const choices = shuffle([word.mean, ...wrongChoices]);
 
@@ -1025,6 +1056,14 @@ $('mcqRestartBtn').addEventListener('click', () => {
   mcqConfigPanel.style.display = 'flex';
   $('mcqProgressFill').style.width = '0%';
   $('mcqProgressLabel').textContent = '0 / 0';
+});
+
+$('datasetSelect').addEventListener('change', () => {
+  loadTypingWords($('datasetSelect').value);
+});
+
+$('mcqDatasetSelect').addEventListener('change', () => {
+  loadMcqWords($('mcqDatasetSelect').value);
 });
 
 
