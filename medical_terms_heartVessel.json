@@ -1,0 +1,731 @@
+{
+  "total_id": 182,
+  "1": {
+    "name": "Blood vessel",
+    "mean": "혈관"
+  },
+  "2": {
+    "name": "Artery",
+    "mean": "동백"
+  },
+  "3": {
+    "name": "Arteriole",
+    "mean": "세동백"
+  },
+  "4": {
+    "name": "Capillary",
+    "mean": "모세혈관"
+  },
+  "5": {
+    "name": "Vein",
+    "mean": "컴백"
+  },
+  "6": {
+    "name": "Venule",
+    "mean": "세정맥"
+  },
+  "7": {
+    "name": "Blood circulation",
+    "mean": "혈액순환"
+  },
+  "8": {
+    "name": "Pulmonary circulation",
+    "mean": "폐순환"
+  },
+  "9": {
+    "name": "Systemic circulation",
+    "mean": "체순환"
+  },
+  "10": {
+    "name": "Right atrium",
+    "mean": "우심방/오른심방"
+  },
+  "11": {
+    "name": "Tricuspid valve",
+    "mean": "삼첨판"
+  },
+  "12": {
+    "name": "Right ventricle",
+    "mean": "우심실/오픈심실"
+  },
+  "13": {
+    "name": "Pulmonary valve",
+    "mean": "폐동맥관/허파동맥판"
+  },
+  "14": {
+    "name": "Pulmonary artery",
+    "mean": "폐동맥/허파동백"
+  },
+  "15": {
+    "name": "Pulmonary vein",
+    "mean": "폐정맥/허파정맥"
+  },
+  "16": {
+    "name": "Left atrium",
+    "mean": "좌심방/원심방"
+  },
+  "17": {
+    "name": "Mitral valve/bicuspid valve",
+    "mean": "승모판/이점판"
+  },
+  "18": {
+    "name": "Left ventricle",
+    "mean": "좌심실/원심실"
+  },
+  "19": {
+    "name": "Aortic valve",
+    "mean": "대동맥판"
+  },
+  "20": {
+    "name": "Aorta",
+    "mean": "대동맥"
+  },
+  "21": {
+    "name": "Septum",
+    "mean": "중격/사이막"
+  },
+  "22": {
+    "name": "Interatrial septum",
+    "mean": "심방사이막/심방중격"
+  },
+  "23": {
+    "name": "Interventricular septum",
+    "mean": "심실사이막/심실중격"
+  },
+  "24": {
+    "name": "Endocardium",
+    "mean": "심내막"
+  },
+  "25": {
+    "name": "Myocardium",
+    "mean": "심근/심장근육증"
+  },
+  "26": {
+    "name": "Pericardium",
+    "mean": "심장박/심남"
+  },
+  "27": {
+    "name": "Visceral pericardium/epicardium",
+    "mean": "내장쪽 심장탁/심회막"
+  },
+  "28": {
+    "name": "Parietal pericardium",
+    "mean": "벽쪽 심장막"
+  },
+  "29": {
+    "name": "Pericardial cavity",
+    "mean": "심장박안/심낭장"
+  },
+  "30": {
+    "name": "Heartbeat/heart sound",
+    "mean": "심박/심음"
+  },
+  "31": {
+    "name": "Diastole",
+    "mean": "확장기/이완기"
+  },
+  "32": {
+    "name": "Systole",
+    "mean": "수축기"
+  },
+  "33": {
+    "name": "Cardiac cycle",
+    "mean": "심장주기"
+  },
+  "34": {
+    "name": "Stethoscope",
+    "mean": "청진기"
+  },
+  "35": {
+    "name": "Heart murmur",
+    "mean": "심장잡음"
+  },
+  "36": {
+    "name": "Sinoatrial node",
+    "mean": "굴심방결절/동방결절"
+  },
+  "37": {
+    "name": "Pacemaker",
+    "mean": "심박조율기/박동조율기"
+  },
+  "38": {
+    "name": "Atrioventricular node",
+    "mean": "방실결절"
+  },
+  "39": {
+    "name": "Atrioventricular bundle / Bundle of His",
+    "mean": "방실다밭/히스다발"
+  },
+  "40": {
+    "name": "Left bundle branch",
+    "mean": "된다발갈래/좌각"
+  },
+  "41": {
+    "name": "Right bundle branch",
+    "mean": "오른다발갈래/우각"
+  },
+  "42": {
+    "name": "Electrocardiogram / Electrocardiography",
+    "mean": "심전도/심전도검사"
+  },
+  "43": {
+    "name": "Blood pressure",
+    "mean": "혈압"
+  },
+  "44": {
+    "name": "Sphygmomanometer",
+    "mean": "혈압게"
+  },
+  "45": {
+    "name": "Angiogram",
+    "mean": "혈관조영상"
+  },
+  "46": {
+    "name": "Angioplasty",
+    "mean": "혈관성형술"
+  },
+  "47": {
+    "name": "Aortic stenosis",
+    "mean": "대동맥판협착/대동맥협착"
+  },
+  "48": {
+    "name": "Arteriosclerosis",
+    "mean": "동맥경화"
+  },
+  "49": {
+    "name": "Arterial anastomosis",
+    "mean": "동맥문학/동백연결"
+  },
+  "50": {
+    "name": "arteriography",
+    "mean": "동백조영술"
+  },
+  "51": {
+    "name": "endarterectomy",
+    "mean": "동맥내막절제술"
+  },
+  "52": {
+    "name": "atheroma",
+    "mean": "죽종"
+  },
+  "53": {
+    "name": "atherosclerotic plaque",
+    "mean": "죽상경화반/플라크"
+  },
+  "54": {
+    "name": "cardiomyopathy",
+    "mean": "심근 /심장근육병중"
+  },
+  "55": {
+    "name": "Bradycardia",
+    "mean": "서맥"
+  },
+  "56": {
+    "name": "Tachycardia",
+    "mean": "빈맥"
+  },
+  "57": {
+    "name": "cardiogenic shock",
+    "mean": "심장성 쇼크"
+  },
+  "58": {
+    "name": "Hypercholesterolemia",
+    "mean": "고콜레스테롤혈증"
+  },
+  "59": {
+    "name": "cyanosis",
+    "mean": "청색증"
+  },
+  "60": {
+    "name": "тухота",
+    "mean": "참액종"
+  },
+  "61": {
+    "name": "hypoxia",
+    "mean": "저산소증"
+  },
+  "62": {
+    "name": "Pericardiocentesis",
+    "mean": "심장막천자/심낭천자"
+  },
+  "63": {
+    "name": "Phlebotomy",
+    "mean": "장백절개/재현"
+  },
+  "64": {
+    "name": "Thrombophlebitis",
+    "mean": "혈전정맥염"
+  },
+  "65": {
+    "name": "Arrhythmia",
+    "mean": "부정맥"
+  },
+  "66": {
+    "name": "thrombolysis",
+    "mean": "혈전용해"
+  },
+  "67": {
+    "name": "valvuloplasty",
+    "mean": " 성형술"
+  },
+  "68": {
+    "name": "Mitral valvulitis",
+    "mean": "승모판막염"
+  },
+  "69": {
+    "name": "vasoconstriction",
+    "mean": "혈관수축"
+  },
+  "70": {
+    "name": "Vasdilation",
+    "mean": "혈관확장"
+  },
+  "71": {
+    "name": "Venipuncture",
+    "mean": " 원자"
+  },
+  "72": {
+    "name": "Heart block",
+    "mean": "심장차단/방실차단"
+  },
+  "73": {
+    "name": "atrial flutter",
+    "mean": "심방조동/조동"
+  },
+  "74": {
+    "name": "fibrillation",
+    "mean": "세동"
+  },
+  "75": {
+    "name": "automated external defibrillator",
+    "mean": "자동제세동기/자동심장충격기"
+  },
+  "76": {
+    "name": "Catheter ablation",
+    "mean": "카테터 절제술"
+  },
+  "77": {
+    "name": "Congenital heart disease",
+    "mean": "선천성 심장질환"
+  },
+  "78": {
+    "name": "Coarctation of the aorta",
+    "mean": "대동맥축착"
+  },
+  "79": {
+    "name": "Patent ductus arteriosus",
+    "mean": "동맥관개존증/동맥관열림증"
+  },
+  "80": {
+    "name": "Ductus arteriosus",
+    "mean": "동맥관"
+  },
+  "81": {
+    "name": "Septal defect",
+    "mean": "중격결손/사이막결손"
+  },
+  "82": {
+    "name": "Atrial septal defect",
+    "mean": "심방중격결손/심방사이 결손"
+  },
+  "83": {
+    "name": "ventricular septal defect",
+    "mean": "심실중격결손/심실사이막길손"
+  },
+  "84": {
+    "name": "Tetralogy of Fallot",
+    "mean": "팔로네실후/팔로사징"
+  },
+  "85": {
+    "name": "pulmonary stenosis/pulmonary artery stenosis",
+    "mean": "폐동맥협착/폐동맥판협착"
+  },
+  "86": {
+    "name": "Right ventricular hypertrophy",
+    "mean": "우심실비대/오른심실비대"
+  },
+  "87": {
+    "name": "transposition of the great arteries",
+    "mean": "대혈관전위"
+  },
+  "88": {
+    "name": "congestive heart failure / heart failure",
+    "mean": "울혈성 심부전"
+  },
+  "89": {
+    "name": "coronary artery disease",
+    "mean": "관상동맥질환/심장동맥병"
+  },
+  "90": {
+    "name": "myocardial infarction",
+    "mean": "심근경색증"
+  },
+  "91": {
+    "name": "acute coronary syndrome",
+    "mean": "급성관상동맥증후군/급성심장동맥증후군"
+  },
+  "92": {
+    "name": "Unstable angina",
+    "mean": "불안정협심증"
+  },
+  "93": {
+    "name": "coronary artery bypass grafting",
+    "mean": "관상동맥우회술/심장동맥우회술"
+  },
+  "94": {
+    "name": "Endocarditis",
+    "mean": "심내막염"
+  },
+  "95": {
+    "name": "Pericarditis",
+    "mean": "심장막염/삼남연"
+  },
+  "96": {
+    "name": "rheumatic heart disease",
+    "mean": "류마티스성 심장질환"
+  },
+  "97": {
+    "name": "deep vein thrombosis",
+    "mean": "심부정맥혈전증/김은정 혈전증"
+  },
+  "98": {
+    "name": "Aneurysm",
+    "mean": "동맥류"
+  },
+  "99": {
+    "name": "Varicose vein",
+    "mean": "정맥류"
+  },
+  "100": {
+    "name": "Angiotensin-converting enzyme inhibitor",
+    "mean": "안지오텐신전환효소 억제제"
+  },
+  "101": {
+    "name": "Auscultation",
+    "mean": "청진"
+  },
+  "102": {
+    "name": "Beta-blocker",
+    "mean": "베타차단제"
+  },
+  "103": {
+    "name": "Biventricular pacemaker",
+    "mean": "양실실 심박조율기"
+  },
+  "104": {
+    "name": "Calcium channel blocker",
+    "mean": "칼슘통로차단제"
+  },
+  "105": {
+    "name": "Cardiac arrest",
+    "mean": "심정지"
+  },
+  "106": {
+    "name": "Cardiac tamponade",
+    "mean": "심장눌림증/심장압전"
+  },
+  "107": {
+    "name": "Claudication",
+    "mean": "다곡신"
+  },
+  "108": {
+    "name": "Digoxin",
+    "mean": "운동할 때 근육 혈류 부족으로 통증이나 경련이 생기고 쉬면 한화되는 증상."
+  },
+  "109": {
+    "name": "Embolus; plural: emboli",
+    "mean": "색전/색전들"
+  },
+  "110": {
+    "name": "Infarction",
+    "mean": "경색"
+  },
+  "111": {
+    "name": "Nitrate",
+    "mean": "질산염재재"
+  },
+  "112": {
+    "name": "Nitroglycerin",
+    "mean": "니트로글리세린"
+  },
+  "113": {
+    "name": "Occlusion",
+    "mean": "패색"
+  },
+  "114": {
+    "name": "Palpitation",
+    "mean": "두근거림/심계항진"
+  },
+  "115": {
+    "name": "Patent open",
+    "mean": "열린/개방된"
+  },
+  "116": {
+    "name": "Pericardial friction rub",
+    "mean": "심장박마찰음"
+  },
+  "117": {
+    "name": "Statin",
+    "mean": "스타틴"
+  },
+  "118": {
+    "name": "Thrill",
+    "mean": "진전/ "
+  },
+  "119": {
+    "name": "Vegetation",
+    "mean": "중식물/우종"
+  },
+  "120": {
+    "name": "Angiography",
+    "mean": "혈관조영술"
+  },
+  "121": {
+    "name": "Computed tomography angiography",
+    "mean": "컴퓨터단충혈관조영술"
+  },
+  "122": {
+    "name": "Digital subtraction angiography",
+    "mean": "디지털감산혈관조영술"
+  },
+  "123": {
+    "name": "Electron beam computed tomography",
+    "mean": "전자방 컴퓨터단층촬영"
+  },
+  "124": {
+    "name": "Doppler ultrasound studies",
+    "mean": "도플러 초음파검사"
+  },
+  "125": {
+    "name": "Echocardiography",
+    "mean": "심초음파검사"
+  },
+  "126": {
+    "name": "Positron emission tomography scan",
+    "mean": "양전자방출단층촬영"
+  },
+  "127": {
+    "name": "Technetium Tc-99m sestamibi scan",
+    "mean": "테크네 -99m 세스타미비 스캔"
+  },
+  "128": {
+    "name": "Thallium-201 scan",
+    "mean": "탈륨-201 스캔"
+  },
+  "129": {
+    "name": "Cardiac magnetic resonance Imaging",
+    "mean": "심장 자기공명영상"
+  },
+  "130": {
+    "name": "Cardiac catheterization",
+    "mean": "심장도관삽입술/심도자 "
+  },
+  "131": {
+    "name": "Holter monitoring",
+    "mean": "홀터검사/24 시간 심전도"
+  },
+  "132": {
+    "name": "Cardiac stress test",
+    "mean": "심장부하검사"
+  },
+  "133": {
+    "name": "Defibrillation",
+    "mean": "제세동"
+  },
+  "134": {
+    "name": "Extracorporeal circulation",
+    "mean": "체외순환"
+  },
+  "135": {
+    "name": "Heart transplantation",
+    "mean": "심장이식"
+  },
+  "136": {
+    "name": "Percutaneous coronary intervention",
+    "mean": "경피적 관상동맥중재술"
+  },
+  "137": {
+    "name": "Thrombolytic therapy",
+    "mean": "혈전용해요법"
+  },
+  "138": {
+    "name": "Transcatheter aortic valve replacement",
+    "mean": "경피적 대동맥판막치환술"
+  },
+  "139": {
+    "name": "Abdominal aortic aneurysm",
+    "mean": "복부대동맥류"
+  },
+  "140": {
+    "name": "Advanced Cardiovascular Life Support",
+    "mean": "전문삼장소생술/전문심혈관소생술"
+  },
+  "141": {
+    "name": "Atrial fibrillation",
+    "mean": "심방세동"
+  },
+  "142": {
+    "name": "Acute myocardial infarction",
+    "mean": "급성심근경색증"
+  },
+  "143": {
+    "name": "Atrioventricular",
+    "mean": "방실의"
+  },
+  "144": {
+    "name": "Aortic valve replacement",
+    "mean": "대동맥판막치환술"
+  },
+  "145": {
+    "name": "bundle branch block",
+    "mean": "다발갈래차단/각차단"
+  },
+  "146": {
+    "name": "B-type natriuretic peptide",
+    "mean": "B형 나트륨이뇨펩타이드"
+  },
+  "147": {
+    "name": "Coronary care unit",
+    "mean": "관상동맥질환 집중치료실/심장중환자실"
+  },
+  "148": {
+    "name": "Catheterization",
+    "mean": "도관삽입/카테터삽입"
+  },
+  "149": {
+    "name": "Creatine kinase",
+    "mean": "크레아틴키나아제"
+  },
+  "150": {
+    "name": "Cardiopulmonary resuscitation",
+    "mean": "심폐소생술"
+  },
+  "151": {
+    "name": "Drug-eluting stent",
+    "mean": "약물방출스텐트"
+  },
+  "152": {
+    "name": "Extracorporeal membrane oxygenation",
+    "mean": "체외박산소공급"
+  },
+  "153": {
+    "name": "Ejection fraction",
+    "mean": "박출물"
+  },
+  "154": {
+    "name": "Electrophysiology study",
+    "mean": "전기생리검사"
+  },
+  "155": {
+    "name": "High-density lipoprotein",
+    "mean": "고밀도지단백"
+  },
+  "156": {
+    "name": "High-sensitivity C-reactive protein",
+    "mean": "고감도 C반응단백"
+  },
+  "157": {
+    "name": "Hypertension",
+    "mean": "고혈압"
+  },
+  "158": {
+    "name": "Intra-aortic balloon pump",
+    "mean": "대동맥내풍선펌프"
+  },
+  "159": {
+    "name": "Implantable cardioverter-defibrillator",
+    "mean": "삽입형 제세동기"
+  },
+  "160": {
+    "name": "Intravascular ultrasound",
+    "mean": "혈관내초음파"
+  },
+  "161": {
+    "name": "Left anterior descending coronary artery",
+    "mean": "원앞내림관상동맥"
+  },
+  "162": {
+    "name": "Low-molecular-weight heparin",
+    "mean": "저분자헤파린"
+  },
+  "163": {
+    "name": "Left ventricular assist device",
+    "mean": "좌심실보조장치"
+  },
+  "164": {
+    "name": "Left ventricular hypertrophy",
+    "mean": "좌심실비대"
+  },
+  "165": {
+    "name": "Mitral valve prolapse",
+    "mean": "승모판탈출증"
+  },
+  "166": {
+    "name": "NOAC: non-vitamin K antagonist oral anticoagulant / novel oral anticoagulant",
+    "mean": "비비타민 K 경구항응고제/세 경구항응고제"
+  },
+  "167": {
+    "name": "Normal sinus rhythm",
+    "mean": "정상동리듬"
+  },
+  "168": {
+    "name": "N-terminal pro-B-type natriuretic peptide",
+    "mean": "NT-proBNP"
+  },
+  "169": {
+    "name": "Non-ST-elevation myocardial infarction",
+    "mean": "비 ST 분절상승 심근경색"
+  },
+  "170": {
+    "name": "Premature atrial contraction",
+    "mean": "심방조기수축"
+  },
+  "171": {
+    "name": "Peripheral arterial disease",
+    "mean": "말초동맥질환"
+  },
+  "172": {
+    "name": "Pulmonary embolus/ pulmonary embolism",
+    "mean": "폐색전/폐색전증"
+  },
+  "173": {
+    "name": "Premature ventricular contraction",
+    "mean": "심실조기수축"
+  },
+  "174": {
+    "name": "Sudden cardiac death",
+    "mean": "돌연심장사/급성심장사"
+  },
+  "175": {
+    "name": "Shortness of breath",
+    "mean": "숨찬/호흡곤란"
+  },
+  "176": {
+    "name": "ST-elevation myocardial infarction",
+    "mean": "ST 분절상승 심근경색"
+  },
+  "177": {
+    "name": "Supraventricular tachycardia",
+    "mean": "상심실성 변백"
+  },
+  "178": {
+    "name": "Transesophageal echocardiography",
+    "mean": "경식도 심초음파검사"
+  },
+  "179": {
+    "name": "Tissue plasminogen activator",
+    "mean": "조직 플라스미노겐 활성제/혈전용해제"
+  },
+  "180": {
+    "name": "Ventricular fibrillation",
+    "mean": "심실세동"
+  },
+  "181": {
+    "name": "Ventricular tachycardia",
+    "mean": "심실빈맥"
+  },
+  "182": {
+    "name": "Wolff-Parkinson-White syndrome",
+    "mean": "울프파킨슨 화이트증후군"
+  }
+}
